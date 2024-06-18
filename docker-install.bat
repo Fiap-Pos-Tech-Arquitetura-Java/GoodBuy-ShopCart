@@ -1,0 +1,2 @@
+docker pull postgres:latest
+docker run --name goodbuy-standalone-shop-cart-db -p 5434:5434 -e PGPORT=5434 -e POSTGRES_USER=goodBuy -e POSTGRES_PASSWORD=goodBuyShopCart -e POSTGRES_DB=goodbuy-shop-cart-db -d postgres

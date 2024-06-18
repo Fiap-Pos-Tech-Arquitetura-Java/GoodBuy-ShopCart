@@ -1,0 +1,32 @@
+services:
+  goodbuy-shop-cart:
+    image: 'goodbuy-shop-cart-docker-image'
+    build:
+      context: .
+    container_name: 'goodbuy-shop-cart-docker-container'
+    depends_on:
+      - db
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5434/goodbuy-shop-cart-db
+      - SPRING_DATASOURCE_USERNAME=goodBuy
+      - SPRING_DATASOURCE_PASSWORD=goodBuyShopCart
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    networks:
+      - goodbuy-network
+  db:
+    image: postgres:latest
+    container_name: goodbuy-shop-cart-db
+    command: -p 5434
+    ports:
+      - "5434:5434"
+    environment:
+      - POSTGRES_USER=goodBuy
+      - POSTGRES_PASSWORD=goodBuyShopCart
+      - POSTGRES_DB=goodbuy-shop-cart-db
+    networks:
+      - goodbuy-network
+networks:
+  goodbuy-network:
+    external: true
