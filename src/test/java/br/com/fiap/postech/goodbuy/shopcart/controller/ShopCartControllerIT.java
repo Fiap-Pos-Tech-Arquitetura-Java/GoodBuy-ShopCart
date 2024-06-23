@@ -3,6 +3,7 @@ package br.com.fiap.postech.goodbuy.shopcart.controller;
 import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ItemHelper;
 import br.com.fiap.postech.goodbuy.shopcart.helper.UserHelper;
+import br.com.fiap.postech.goodbuy.shopcart.integration.ItemIntegration;
 import br.com.fiap.postech.goodbuy.shopcart.security.UserDetailsServiceImpl;
 import br.com.fiap.postech.goodbuy.shopcart.security.enums.UserRole;
 import io.restassured.RestAssured;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,9 @@ public class ShopCartControllerIT {
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
 
+    @MockBean
+    private ItemIntegration itemIntegration;
+
     @BeforeEach
     void setup() {
         RestAssured.port = port;
@@ -54,8 +59,10 @@ public class ShopCartControllerIT {
             var user = UserHelper.getUser(true, "anderson.wagner", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
-
             var item = ItemHelper.getItem();
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
+
             given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, UserHelper.getToken(user))
@@ -145,8 +152,10 @@ public class ShopCartControllerIT {
             var user = UserHelper.getUser(true, "usuario.comum", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
-
             var item = new Item(UUID.fromString("1e33307b-4c47-4407-8ebc-c60ef45d7f76"), 5L);
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
+
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.AUTHORIZATION, UserHelper.getToken(user))

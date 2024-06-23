@@ -28,6 +28,8 @@ class ShopCartControllerTest {
 
     public static final String REMOVE_ITEM = "/removeItem";
     private static final String USER_LOGIN = "login_do_usuario";
+    private static final String TOKEN = "login_do_usuario";
+
     private MockMvc mockMvc;
     @Mock
     private ShopCartService shopCartService;
@@ -58,15 +60,16 @@ class ShopCartControllerTest {
         void devePermitirAdicionarItem_EmptyShopCart() throws Exception {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(false);
-            when(shopCartService.addItem(anyString(), any(Item.class))).thenReturn(shopCart);
+            when(shopCartService.addItem(anyString(), anyString(), any(Item.class))).thenReturn(shopCart);
             when(securityHelper.getLoggedUser()).thenReturn(USER_LOGIN);
+            when(securityHelper.getToken()).thenReturn(TOKEN);
             // Act
             mockMvc.perform(
                             post(SHOPCART + ADD_ITEM).contentType(MediaType.APPLICATION_JSON)
                                     .content(asJsonString(shopCart.getItens().get(0))))
                     .andExpect(status().isOk());
             // Assert
-            verify(shopCartService, times(1)).addItem(anyString(), any(Item.class));
+            verify(shopCartService, times(1)).addItem(anyString(), anyString(), any(Item.class));
             verify(securityHelper, times(1)).getLoggedUser();
         }
 
@@ -74,14 +77,14 @@ class ShopCartControllerTest {
         void deveGerarExcecao_QuandoRegistrarShopCart_RequisicaoXml() throws Exception {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(false);
-            when(shopCartService.addItem(anyString(), any(Item.class))).thenReturn(shopCart);
+            when(shopCartService.addItem(anyString(), anyString(), any(Item.class))).thenReturn(shopCart);
             // Act
             mockMvc.perform(
                             post(SHOPCART + ADD_ITEM).contentType(MediaType.APPLICATION_XML)
                                     .content(asJsonString(shopCart.getItens().get(0))))
                     .andExpect(status().isUnsupportedMediaType());
             // Assert
-            verify(shopCartService, never()).addItem(anyString(), any(Item.class));
+            verify(shopCartService, never()).addItem(anyString(), anyString(), any(Item.class));
         }
     }
 
@@ -91,13 +94,14 @@ class ShopCartControllerTest {
         void devePermitirBuscarShopCartPorId() throws Exception {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(true);
-            when(shopCartService.get(anyString())).thenReturn(shopCart);
+            when(shopCartService.get(anyString(), anyString())).thenReturn(shopCart);
             when(securityHelper.getLoggedUser()).thenReturn(USER_LOGIN);
+            when(securityHelper.getToken()).thenReturn(TOKEN);
             // Act
             mockMvc.perform(get(SHOPCART, shopCart.getId().toString()))
                     .andExpect(status().isOk());
             // Assert
-            verify(shopCartService, times(1)).get(anyString());
+            verify(shopCartService, times(1)).get(anyString(), anyString());
             verify(securityHelper, times(1)).getLoggedUser();
         }
     }
@@ -108,15 +112,16 @@ class ShopCartControllerTest {
         void devePermitirRemoverItem_EmptyShopCart() throws Exception {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(false);
-            when(shopCartService.removeItem(anyString(), any(Item.class))).thenReturn(shopCart);
+            when(shopCartService.removeItem(anyString(), anyString(), any(Item.class))).thenReturn(shopCart);
             when(securityHelper.getLoggedUser()).thenReturn(USER_LOGIN);
+            when(securityHelper.getToken()).thenReturn(TOKEN);
             // Act
             mockMvc.perform(
                             post(SHOPCART + REMOVE_ITEM).contentType(MediaType.APPLICATION_JSON)
                                     .content(asJsonString(shopCart.getItens().get(0))))
                     .andExpect(status().isOk());
             // Assert
-            verify(shopCartService, times(1)).removeItem(anyString(), any(Item.class));
+            verify(shopCartService, times(1)).removeItem(anyString(), anyString(), any(Item.class));
             verify(securityHelper, times(1)).getLoggedUser();
         }
 
@@ -124,14 +129,14 @@ class ShopCartControllerTest {
         void deveGerarExcecao_QuandoRegistrarShopCart_RequisicaoXml() throws Exception {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(false);
-            when(shopCartService.removeItem(anyString(), any(Item.class))).thenReturn(shopCart);
+            when(shopCartService.removeItem(anyString(), anyString(), any(Item.class))).thenReturn(shopCart);
             // Act
             mockMvc.perform(
                             post(SHOPCART + REMOVE_ITEM).contentType(MediaType.APPLICATION_XML)
                                     .content(asJsonString(shopCart.getItens().get(0))))
                     .andExpect(status().isUnsupportedMediaType());
             // Assert
-            verify(shopCartService, never()).removeItem(anyString(), any(Item.class));
+            verify(shopCartService, never()).removeItem(anyString(), anyString(), any(Item.class));
         }
     }
 }

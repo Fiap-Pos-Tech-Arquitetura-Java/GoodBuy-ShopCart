@@ -11,4 +11,11 @@ public class ItemHelper {
                 1L
         );
     }
+
+    public static Item getItemForIntegration(Item item) {
+        var itemForIntegration = new Item(item.getId(), item.getQuantidade());
+        itemForIntegration.setPreco(12.34D);
+        itemForIntegration.setNome("nome");
+        return itemForIntegration;
+    }
 }

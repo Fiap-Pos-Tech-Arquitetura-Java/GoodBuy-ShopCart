@@ -11,4 +11,8 @@ public class SecurityHelper {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getUsername();
     }
+
+    public String getToken() {
+        return String.valueOf(SecurityContextHolder.getContext().getAuthentication().getCredentials());
+    }
 }

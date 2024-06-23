@@ -1,9 +1,6 @@
 package br.com.fiap.postech.goodbuy.shopcart.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -16,6 +13,10 @@ public class Item {
     private UUID id;
     @Column(name = "quantidade", nullable = false)
     private Long quantidade;
+    @Transient
+    private String nome;
+    @Transient
+    private Double preco;
 
     public Item() {
         super();
@@ -52,5 +53,21 @@ public class Item {
 
     public void setQuantidade(Long quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
     }
 }

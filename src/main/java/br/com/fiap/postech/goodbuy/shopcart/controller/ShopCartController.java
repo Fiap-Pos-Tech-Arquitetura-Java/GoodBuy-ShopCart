@@ -31,20 +31,27 @@ public class ShopCartController {
     @PreAuthorize("!hasRole('ADMIN')")
     @Operation(summary = "adiciona um item no carrinho de compras")
     public ShopCart addItem(@Valid @RequestBody Item item) {
-        return shopCartService.addItem(securityHelper.getLoggedUser(), item);
+        return shopCartService.addItem(securityHelper.getToken(), securityHelper.getLoggedUser(), item);
     }
 
     @PostMapping(path = "/removeItem", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("!hasRole('ADMIN')")
     @Operation(summary = "remove um item no carrinho de compras")
     public ShopCart removeItem(@Valid @RequestBody Item item) {
-        return shopCartService.removeItem(securityHelper.getLoggedUser(), item);
+        return shopCartService.removeItem(securityHelper.getToken(), securityHelper.getLoggedUser(), item);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("!hasRole('ADMIN')")
-    @Operation(summary = "lista um item por seu id")
+    @Operation(summary = "lista todos os itens de um shop cart")
     public ShopCart get() {
-        return shopCartService.get(securityHelper.getLoggedUser());
+        return shopCartService.get(securityHelper.getToken(), securityHelper.getLoggedUser());
+    }
+
+    @DeleteMapping
+    @PreAuthorize("!hasRole('ADMIN')")
+    @Operation(summary = "remove um shop cart")
+    public void delete() {
+        shopCartService.delete(securityHelper.getLoggedUser());
     }
 }

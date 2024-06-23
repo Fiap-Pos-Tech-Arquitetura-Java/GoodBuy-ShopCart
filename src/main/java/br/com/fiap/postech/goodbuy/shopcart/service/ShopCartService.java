@@ -4,11 +4,11 @@ import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.entity.ShopCart;
 
 public interface ShopCartService {
-    ShopCart addItem(String login, Item item);
+    ShopCart addItem(String token, String login, Item item);
 
-    ShopCart removeItem(String login, Item item);
+    ShopCart removeItem(String token, String login, Item item);
 
-    ShopCart get(String login);
+    ShopCart get(String token, String login);
 
     void delete(String login);
 }

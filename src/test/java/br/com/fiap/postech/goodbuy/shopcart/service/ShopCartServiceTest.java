@@ -4,6 +4,7 @@ import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.entity.ShopCart;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ItemHelper;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ShopCartHelper;
+import br.com.fiap.postech.goodbuy.shopcart.integration.ItemIntegration;
 import br.com.fiap.postech.goodbuy.shopcart.repository.ShopCartRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,13 +27,15 @@ public class ShopCartServiceTest {
     @Mock
     private ShopCartRepository shopCartRepository;
 
+    @Mock
+    private ItemIntegration itemIntegration;
 
     private AutoCloseable mock;
 
     @BeforeEach
     void setUp() {
         mock = MockitoAnnotations.openMocks(this);
-        shopCartService = new ShopCartServiceImpl(shopCartRepository);
+        shopCartService = new ShopCartServiceImpl(shopCartRepository, itemIntegration);
     }
 
     @AfterEach
@@ -46,10 +49,12 @@ public class ShopCartServiceTest {
         void devePermitirAdicionarItem_EmptyShopCart() {
             // Arrange
             var item = ItemHelper.getItem();
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.empty());
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.addItem("login", item);
+            var shopCartSalvo = shopCartService.addItem("token","login", item);
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -68,10 +73,12 @@ public class ShopCartServiceTest {
             var shopCart = ShopCartHelper.getShopCart(true);
             var quantidadeOriginal = shopCart.getItens().get(0).getQuantidade();
             var item = new Item(shopCart.getItens().get(0).getId(), 10L);
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.addItem("login", item);
+            var shopCartSalvo = shopCartService.addItem("token","login", item);
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -91,10 +98,12 @@ public class ShopCartServiceTest {
         void devePermitirRemoverItem() {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(true);
+            var itemForIntegration = ItemHelper.getItemForIntegration(shopCart.getItens().get(0));
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.removeItem("login", shopCart.getItens().stream().findFirst().orElseThrow());
+            var shopCartSalvo = shopCartService.removeItem("token","login", shopCart.getItens().stream().findFirst().orElseThrow());
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -111,10 +120,12 @@ public class ShopCartServiceTest {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(true);
             shopCart.getItens().remove(0);
+            var itemForIntegration = ItemHelper.getItemForIntegration(shopCart.getItens().get(0));
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.removeItem("login", shopCart.getItens().stream().findFirst().orElseThrow());
+            var shopCartSalvo = shopCartService.removeItem("token","login", shopCart.getItens().stream().findFirst().orElseThrow());
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -134,7 +145,7 @@ public class ShopCartServiceTest {
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
             // Act && Assert
-            assertThatThrownBy(() -> shopCartService.removeItem("login", item))
+            assertThatThrownBy(() -> shopCartService.removeItem("token","login", item))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("A quantidade de um item não pode ser negativa.");
             verify(shopCartRepository, times(1)).findByLogin(anyString());
@@ -149,7 +160,7 @@ public class ShopCartServiceTest {
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
             when(shopCartRepository.save(any(ShopCart.class))).thenAnswer(r -> r.getArgument(0));
             // Act && Assert
-            assertThatThrownBy(() -> shopCartService.removeItem("login", item))
+            assertThatThrownBy(() -> shopCartService.removeItem("token","login", item))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Item não encontrado no carrinho de compras.");
             verify(shopCartRepository, times(1)).findByLogin(anyString());
@@ -164,7 +175,7 @@ public class ShopCartServiceTest {
             // Arrange
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.empty());
             // Act
-            var shopCartObtido = shopCartService.get("login");
+            var shopCartObtido = shopCartService.get("token","login");
             // Assert
             assertThat(shopCartObtido).isNotNull();
             assertThat(shopCartObtido.getItens()).isNotNull();

@@ -3,17 +3,22 @@ package br.com.fiap.postech.goodbuy.shopcart.service;
 import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.entity.ShopCart;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ItemHelper;
+import br.com.fiap.postech.goodbuy.shopcart.integration.ItemIntegration;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -24,14 +29,19 @@ public class ShopCartServiceIT {
     @Autowired
     private ShopCartService shopCartService;
 
+    @MockBean
+    private ItemIntegration itemIntegration;
+
     @Nested
     class AdicionarItemShopCart {
         @Test
         void devePermitirAdicionarItem_EmptyShopCart() {
             // Arrange
             var item = ItemHelper.getItem();
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.addItem("anderson.wagner", item);
+            var shopCartSalvo = shopCartService.addItem("token","anderson.wagner", item);
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -50,8 +60,10 @@ public class ShopCartServiceIT {
         void devePermitirRemoverItem_EmptyShopCart() {
             // Arrange
             var item = new Item(UUID.fromString("93b7e9d1-3632-4cae-8e66-4a22505e7470"), 5L);
+            var itemForIntegration = ItemHelper.getItemForIntegration(item);
+            when(itemIntegration.getItem(anyString(), any(UUID.class))).thenReturn(itemForIntegration);
             // Act
-            var shopCartSalvo = shopCartService.removeItem("kaiby.santos", item);
+            var shopCartSalvo = shopCartService.removeItem("token","kaiby.santos", item);
             // Assert
             assertThat(shopCartSalvo)
                     .isInstanceOf(ShopCart.class)
@@ -64,12 +76,12 @@ public class ShopCartServiceIT {
     }
 
     @Nested
-    class BuscarPedido {
+    class BuscarShopCart {
         @Test
-        void devePermitirBuscarPedidoPorId() {
+        void devePermitirBuscarShopCartPorId() {
             // Arrange
             // Act
-            var pedidoObtido = shopCartService.get("anderson.wagner");
+            var pedidoObtido = shopCartService.get("token","anderson.wagner");
             // Assert
             assertThat(pedidoObtido).isNotNull().isInstanceOf(ShopCart.class);
             assertThat(pedidoObtido.getId()).isNotNull();
@@ -77,15 +89,15 @@ public class ShopCartServiceIT {
     }
 
     @Nested
-    class RemoverPedido {
+    class RemoverShopCart {
         @Test
-        void devePermitirRemoverPedido() {
+        void devePermitirRemoverShopCart() {
             // Arrange
             var login = "janaina.alvares";
             // Act
             shopCartService.delete(login);
             // Assert
-            var pedidoObtido = shopCartService.get(login);
+            var pedidoObtido = shopCartService.get("token", login);
             assertThat(pedidoObtido.getId()).isNotNull();
             assertThat(pedidoObtido.getItens()).isNotNull();
             assertThat(pedidoObtido.getItens()).isEmpty();
