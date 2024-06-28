@@ -1,8 +1,8 @@
 package br.com.fiap.postech.goodbuy.shopcart.controller;
 
+import br.com.fiap.postech.goodbuy.security.SecurityHelper;
 import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ShopCartHelper;
-import br.com.fiap.postech.goodbuy.shopcart.security.SecurityHelper;
 import br.com.fiap.postech.goodbuy.shopcart.service.ShopCartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;

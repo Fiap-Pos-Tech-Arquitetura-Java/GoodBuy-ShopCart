@@ -1,11 +1,11 @@
 package br.com.fiap.postech.goodbuy.shopcart.controller;
 
+import br.com.fiap.postech.goodbuy.security.UserDetailsServiceImpl;
+import br.com.fiap.postech.goodbuy.security.enums.UserRole;
 import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.helper.ItemHelper;
 import br.com.fiap.postech.goodbuy.shopcart.helper.UserHelper;
 import br.com.fiap.postech.goodbuy.shopcart.integration.ItemIntegration;
-import br.com.fiap.postech.goodbuy.shopcart.security.UserDetailsServiceImpl;
-import br.com.fiap.postech.goodbuy.shopcart.security.enums.UserRole;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

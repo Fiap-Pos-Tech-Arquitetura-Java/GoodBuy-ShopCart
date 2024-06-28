@@ -1,8 +1,8 @@
 package br.com.fiap.postech.goodbuy.shopcart.controller;
 
+import br.com.fiap.postech.goodbuy.security.SecurityHelper;
 import br.com.fiap.postech.goodbuy.shopcart.entity.Item;
 import br.com.fiap.postech.goodbuy.shopcart.entity.ShopCart;
-import br.com.fiap.postech.goodbuy.shopcart.security.SecurityHelper;
 import br.com.fiap.postech.goodbuy.shopcart.service.ShopCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
