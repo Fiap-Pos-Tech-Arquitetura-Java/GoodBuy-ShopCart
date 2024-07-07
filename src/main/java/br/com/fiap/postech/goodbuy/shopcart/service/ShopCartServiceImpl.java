@@ -79,7 +79,6 @@ public class ShopCartServiceImpl implements ShopCartService {
 
     @Override
     public void delete(String login) {
-        shopCartRepository.findByLogin(login)
-                .ifPresent(shopCart -> shopCartRepository.deleteById(shopCart.getId()));
+        shopCartRepository.findByLogin(login).ifPresent(shopCartRepository::delete);
     }
 }
