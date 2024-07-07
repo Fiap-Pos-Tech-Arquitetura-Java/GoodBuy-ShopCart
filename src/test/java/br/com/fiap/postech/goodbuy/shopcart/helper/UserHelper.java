@@ -10,17 +10,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.UUID;
 
 public class UserHelper {
-    public static User getUser(boolean geraId, String login, UserRole userRole) {
+    public static User getUser(String login, UserRole userRole) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        var user = new User(
+        return new User(
                 login,
                 encoder.encode("123456"),
                 userRole
         );
-        if (geraId) {
-            user.setId(UUID.randomUUID());
-        }
-        return user;
     }
 
     public static String getToken(User user) {
@@ -28,7 +24,7 @@ public class UserHelper {
     }
 
     public static String getToken(String login, UserRole userRole) {
-        return getToken(getUser(true, login, userRole));
+        return getToken(getUser(login, userRole));
     }
 
     public static UserDetails getUserDetails(User user) {

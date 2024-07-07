@@ -56,7 +56,7 @@ public class ShopCartControllerIT {
     class AdicionarItemShopCart {
         @Test
         void devePermitirAdicionarItem_EmptyShopCart() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.USER);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
             var item = ItemHelper.getItem();
@@ -76,7 +76,7 @@ public class ShopCartControllerIT {
 
         @Test
         void deveGerarExcecao_QuandoCadastrarShopCart_RequisicaoXml() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.USER);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
@@ -92,7 +92,7 @@ public class ShopCartControllerIT {
 
         @Test
         void deveGerarExcecao_QuandoAdicionarItem_UserAdministrativo() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.ADMIN);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.ADMIN);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
@@ -113,7 +113,7 @@ public class ShopCartControllerIT {
     class BuscarShopCart {
         @Test
         void devePermitirBuscarShopCart() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.USER);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
@@ -129,7 +129,7 @@ public class ShopCartControllerIT {
 
         @Test
         void deveGerarExcecao_QuandoBuscarShopCart_UserAdministrativo() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.ADMIN);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.ADMIN);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
@@ -149,7 +149,7 @@ public class ShopCartControllerIT {
     class RemoverItemShopCart {
         @Test
         void devePermitirRemoverItem_EmptyShopCart() {
-            var user = UserHelper.getUser(true, "usuario.comum", UserRole.USER);
+            var user = UserHelper.getUser("usuario.comum", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
             var item = new Item(UUID.fromString("1e33307b-4c47-4407-8ebc-c60ef45d7f76"), 5L);
@@ -169,7 +169,7 @@ public class ShopCartControllerIT {
 
         @Test
         void deveGerarExcecao_QuandoRemoverShopCart_RequisicaoXml() {
-            var user = UserHelper.getUser(true, "anderson.wagner", UserRole.USER);
+            var user = UserHelper.getUser("anderson.wagner", UserRole.USER);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
@@ -185,7 +185,7 @@ public class ShopCartControllerIT {
 
         @Test
         void deveGerarExcecao_QuandoRemoverShopCart_UserAdministrativo() {
-            var user = UserHelper.getUser(true, "usuario.comum", UserRole.ADMIN);
+            var user = UserHelper.getUser("usuario.comum", UserRole.ADMIN);
             var userDetails = UserHelper.getUserDetails(user);
             when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
 
