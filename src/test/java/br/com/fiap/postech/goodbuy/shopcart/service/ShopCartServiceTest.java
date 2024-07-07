@@ -202,12 +202,12 @@ public class ShopCartServiceTest {
             // Arrange
             var shopCart = ShopCartHelper.getShopCart(true);
             when(shopCartRepository.findByLogin(anyString())).thenReturn(Optional.of(shopCart));
-            doNothing().when(shopCartRepository).deleteById(shopCart.getId());
+            doNothing().when(shopCartRepository).delete(shopCart);
             // Act
             shopCartService.delete("login");
             // Assert
             verify(shopCartRepository, times(1)).findByLogin(anyString());
-            verify(shopCartRepository, times(1)).deleteById(any(UUID.class));
+            verify(shopCartRepository, times(1)).delete(any(ShopCart.class));
         }
     }
 }
