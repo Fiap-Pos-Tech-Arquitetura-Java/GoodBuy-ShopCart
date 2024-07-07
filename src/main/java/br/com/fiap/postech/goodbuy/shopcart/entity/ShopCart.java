@@ -16,7 +16,7 @@ public class ShopCart {
     @Column(name = "login", nullable = false)
     @JsonIgnore
     private String login;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_shop_cart", nullable = false)
     List<Item> itens;
 
