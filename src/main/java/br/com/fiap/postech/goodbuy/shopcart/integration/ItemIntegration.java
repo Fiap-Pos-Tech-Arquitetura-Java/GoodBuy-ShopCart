@@ -11,13 +11,13 @@ import java.util.UUID;
 @Service
 public class ItemIntegration {
 
-    @Value("${REMOTE_BASE_URI:http://localhost:8081/goodbuy/item/{id}}")
+    @Value("${goodbuy.item.url}")
     String baseURI;
 
     public Item getItem(String token, UUID id) {
         RestClient restClient = RestClient.create();
         Item item = restClient.get()
-                .uri(baseURI, id)
+                .uri(baseURI + "/{id}", id)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
