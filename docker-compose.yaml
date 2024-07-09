@@ -9,6 +9,7 @@ services:
     ports:
       - "8082:8082"
     environment:
+      - SPRING_PROFILES_ACTIVE=development
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5434/goodbuy-shop-cart-db
       - SPRING_DATASOURCE_USERNAME=goodBuy
       - SPRING_DATASOURCE_PASSWORD=goodBuyShopCart
