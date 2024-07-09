@@ -1,9 +1,9 @@
 services:
   goodbuy-shop-cart:
-    image: 'goodbuy-shop-cart-docker-image'
+    image: 'goodbuy-shop-cart-image'
     build:
       context: .
-    container_name: 'goodbuy-shop-cart-docker-container'
+    container_name: 'goodbuy-shop-cart-container'
     depends_on:
       - db
     ports:
